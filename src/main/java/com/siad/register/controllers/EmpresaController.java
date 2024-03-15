@@ -6,12 +6,14 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import com.siad.register.DTO.RequestEmpresaDTO;
 import com.siad.register.models.Empresa;
@@ -51,5 +53,12 @@ public class EmpresaController {
       return ResponseEntity.status(HttpStatus.OK).body(empresa);
     }
     return ResponseEntity.noContent().build();
+  }
+
+  @DeleteMapping("/{id}")
+  @Transactional
+  @ResponseStatus(HttpStatus.NO_CONTENT) // Retorna 204 em caso de sucesso
+  public void deleteContato(@PathVariable @NonNull Long id) {
+    repository.deleteById(id);
   }
 }
