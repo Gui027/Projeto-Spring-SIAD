@@ -32,8 +32,8 @@ public class ContatoController {
 
   @GetMapping
   public ResponseEntity<List<Contato>> getAllContato() {
-    var allContato = repository.findAll();
-    return ResponseEntity.ok(allContato);
+    var contatosAtivosDeClientesAtivos = repository.findAtivosComClientesAtivos();
+    return ResponseEntity.ok(contatosAtivosDeClientesAtivos);
   }
 
   @PostMapping
@@ -55,6 +55,19 @@ public class ContatoController {
       return ResponseEntity.status(HttpStatus.OK).body(contato);
     }
     return ResponseEntity.noContent().build();
+  }
+
+  @PutMapping("/desativar/{id}")
+  @Transactional
+  public ResponseEntity<Void> desativarContato(@PathVariable @NonNull Long id) {
+    Optional<Contato> optionalContato = repository.findById(id);
+    if (optionalContato.isPresent()) {
+      Contato contato = optionalContato.get();
+      contato.setAtivo(false);
+      repository.save(contato);
+      return ResponseEntity.noContent().build();
+    }
+    return ResponseEntity.notFound().build();
   }
 
   @DeleteMapping("/{id}")
